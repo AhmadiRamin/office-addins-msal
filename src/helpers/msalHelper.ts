@@ -71,6 +71,8 @@ export const logoutFromO365 = async () => {
   });
 
   const processLogoutMessage = () => {
+    loginService.setTokens(null);
+    localStorage.setItem("loggedIn","");
     logoutDialog.close();
   };
 };

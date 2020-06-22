@@ -21,10 +21,7 @@ const App: React.FC<IAppProps> = props => {
   const [userInfo, setUserInfo] = React.useState<User>(null);
   const [azureResponse, setAzureResponse] = React.useState("");
   const [searchResult, setSearchResult] = React.useState([]);
-
-  React.useEffect(() => {
-    loginService.getAccessToken();
-  }, []);
+  const [loading, setLoading] = React.useState(false);
 
   const getUserDetails = async () => {
     const controller = new GraphController(tokens.graphToken);
@@ -45,7 +42,13 @@ const App: React.FC<IAppProps> = props => {
   };
 
   const logOut = () => {
+    setLoading(false);
     loginService.logOut();
+  };
+
+  const logIn = () => {
+    setLoading(true);
+    loginService.getAccessToken();
   };
 
   const onClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -63,19 +66,32 @@ const App: React.FC<IAppProps> = props => {
   }
   if (!tokens) {
     return (
-      <div className="ms-welcome__main">
+      <div className="ms-welcome__header ms-u-fadeIn500">
         {error && <Alert message="Error" description={error} type="error" closable onClose={onClose} />}
-        <Space size="middle">
-          <Spin size="large" tip="Loading..." />
-        </Space>
+        {!loading && (
+          <section className="ms-welcome__header ms-u-fadeIn500">
+            <h1 className="ms-fontSize-su ms-fontWeight-light ms-fontColor-neutralPrimary">
+              Welcome!
+            </h1>
+            <h3>Please sign in to see the content.</h3>
+            <Button type="dashed" danger onClick={logIn}>
+              Log in
+            </Button>
+            
+          </section>
+        )}
+        {loading && (
+          <Space size="middle">
+            <Spin size="large" tip="Loading..." />
+          </Space>
+        )}
       </div>
     );
   }
-
   return (
     <div className="ms-welcome__main">
-      <Row>
-        <Button type="link" block onClick={logOut}>
+      <Row className="centerBlock">
+        <Button type="dashed" danger onClick={logOut}>
           Log Out
         </Button>
       </Row>

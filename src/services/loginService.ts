@@ -16,11 +16,11 @@ export default class LoginService {
   }
 
   public async getAccessToken(): Promise<void> {
-    const cachedTokens = sessionStorage.getItem("cachedTokens");
+    const cachedTokens = localStorage.getItem("cachedTokens");
     if (cachedTokens) {
       this.tokens.set(JSON.parse(cachedTokens));
     } else {
-      sessionStorage.setItem("loggedIn", "");
+      localStorage.setItem("loggedIn", "");
       loginToOffice365();
     }
   }
